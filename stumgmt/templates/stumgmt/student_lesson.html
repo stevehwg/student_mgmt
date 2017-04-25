@@ -1,0 +1,25 @@
+{% extends "stumgmt/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+	<!-- Test form in index.html -->
+	<div class="row" id="subheader">
+		<div class="col-xs-12 h3" id="pagetitle"><strong>Student Lesson View</strong></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-8">
+			<form method="POST" class="post-form">
+				{% csrf_token %}
+				<div>
+					<ul>
+						{{form.as_ul }}
+					</ul>
+				</div>
+				<div class="button">
+					<button type='submit' class="save btn btn-default">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+{% endblock %}

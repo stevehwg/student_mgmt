@@ -1,0 +1,33 @@
+{% extends "stumgmt/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="row" id="subheader">
+		<div class="col-xs-12 h3" id="pagetitle"><strong>Student Detail View</strong></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-8">
+			
+			<a href="{% url 'new_student_payment' student.pk %}">Record student Payment</a>
+			<p> 
+				{% for lesson in student.student_in_student.all %}
+				<li>
+					Student {{ lesson }} - confirmed and signed at {{ lesson.student_signed_at | time:"H:i" }}
+					on {{lesson.student_signed_at | date:"SHORT_DATE_FORMAT" }} 
+				</li>
+				{% empty %}
+				<!--<li>No students yet.</li>-->
+				{% endfor %}
+				{% for t in student.student_in_teacher.all %}
+				<li>
+					Teacher {{ t }} - confirmed and signed at {{ t.teacher_signed_at | time:"H:i" }}
+					on {{t.teacher_signed_at | date:"SHORT_DATE_FORMAT" }}
+				</li>
+				{% empty %}
+				<li>No students yet.</li>
+				{% endfor %}
+			</p>
+		</div>
+	</div>
+
+{% endblock %}

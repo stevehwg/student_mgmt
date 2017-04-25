@@ -1,0 +1,43 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test - Student Management</title>
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+		<link rel = "stylesheet" href = "{% static "css/stumgmt.css" %}">
+	</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>Test - Student Management</h1>
+		</div>
+		<div class="banner">
+			<!--<img src="{% static "images\banner.jpg" %}" class="img-responsive center-block" />-->
+		</div>
+		<div class="nav">
+			<ul class="pull-left">
+				<li>[ <a href="{% url 'index' %}">Home</a> ]</li>
+				<li>[ <a href="{% url 'new_payment' %}">Record Payment</a> ]</li>
+				<li>[ <a href="{% url 'teacher_lesson' %}">Record Teacher Lesson</a> ]</li>
+				<li>[ <a href="{% url 'student_lesson' %}">Record Student Lesson</a> ]</li>
+				<li>[ <a href="{% url 'student_list' %}">Student List</a> ]</li>
+				<li>[ <a href="{% url 'admin:index' %}">link to admin panel</a> ]</li>
+				<li>	
+					<form method="get" action="/search/">
+					<input type="text" name="q" placeholder='search' required />
+					<input type="submit" class="save btn btn-default btn-xs" value="Submit"/>
+					</form>
+				</li>
+			</ul>
+		</div>
+		
+		<!-- block with container level of <div> -->
+		{% block content %}
+		{% endblock %}
+		<div class="row">
+			<div class="footer">S.Hwang © All Rights Reserved.</div>
+		</div>
+	</div>
+</body>
+</html>

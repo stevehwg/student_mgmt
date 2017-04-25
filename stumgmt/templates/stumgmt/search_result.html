@@ -1,0 +1,36 @@
+{% extends "stumgmt/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="row" id="subheader">
+		<div class="col-xs-12 h3" id="pagetitle"><strong>You Searched "{{ query_string }}"</strong></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<p>
+				{% for i in query %}
+					<li><a href="{% url 'student_detail' i.pk %}">{{ i }}</a></li>
+				{% empty %}
+					<li>No students found.</li>
+				{% endfor %}
+			</p>
+		</div>
+		<p></p>
+		<div class="pagination"  class="col-xs-12">
+			<span class="step-links">
+			{% if query.has_previous %}
+			    <a href="?q={{ query_string }}&page={{ query.previous_page_number }}">previous</a>
+			{% endif %}
+			
+			<span class="current">
+			    Page {{ query.number }} of {{ query.paginator.num_pages }}
+			</span>
+			
+			{% if query.has_next %}
+			    <a href="?q={{ query_string }}&page={{ query.next_page_number }}">next</a>
+			{% endif %}
+			</span>
+		</div>
+	</div>
+
+{% endblock %}

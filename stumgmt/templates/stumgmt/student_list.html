@@ -1,0 +1,20 @@
+{% extends "stumgmt/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="row" id="subheader">
+		<div class="col-xs-12 h3" id="pagetitle"><strong>Student List View</strong></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-8">
+			<p>
+				{% for student in student_list %}
+				<li><a href="{% url 'student_detail' student.pk %}">{{ student.student_name }}</a></li>
+				{% empty %}
+				<li>No students yet.</li>
+				{% endfor %}
+			</p>
+		</div>
+	</div>
+
+{% endblock %}
