@@ -43,6 +43,9 @@ class Student(models.Model):
     def rate_update(self, new_rate):
         self.student_rate = new_rate
         return self.student_rate
+        
+    def get_user(self):
+        return self.student_name
     
     def __unicode__(self):
         return self.student_name
@@ -104,6 +107,9 @@ class TeacherLesson(models.Model):
     # not visible for modification
     teacher_signed_at = models.DateTimeField(default = timezone.now, blank = True, null = True)
     
+    def stash(self):
+        self.save()
+    
     def __unicode__(self):
         return str(self.teacher.get_username())
 
@@ -117,3 +123,23 @@ class StudentLesson(models.Model):
     
     def __unicode__(self):
         return str(self.student.student_name)
+        
+class Lesson(models.Model):
+    teacher = models.ForeignKey('auth.User', related_name = 'teacher_in_lesson_model')
+    student = models.ForeignKey(Student, related_name = 'student_in_lesson_model')
+    
+    teacher_confirmation = models.BooleanField(default = False)
+    
+    # not visible for modification
+    teacher_signed_at = models.DateTimeField(blank = True, null = True)
+    
+    student_confirmation = models.BooleanField(default = False)
+    student_signed_at = models.DateTimeField(blank = True, null = True)
+
+    def stash(self):
+        self.teacher_confirmation = True
+        self.teacher_signed_at = timezone.now()
+        self.save()    
+    
+    def __unicode__(self):
+        return str(self.teacher.get_username()) + ' ' + str(self.student.student_name)

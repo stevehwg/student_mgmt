@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Student,Payment, Note, TeacherLesson, StudentLesson
+from .models import Student,Payment, Note, TeacherLesson, StudentLesson, Lesson
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
@@ -73,7 +73,6 @@ def payment(request, **pk):
 		pass
 	
 	if request.method == 'POST':
-	
 		
 		form = PaymentForm(request.POST)
 
@@ -98,7 +97,8 @@ def payment(request, **pk):
 			# # Compose email message
 			# email = EmailMessage('Comment from sh19238 website', content, 'sh19238 contact', to=['Steven Hwang <shihwei.hwang@gmail.com>'])
 			# email.send()
-
+			student.active = True
+			student.save()
 			payment.save()
 			return redirect('student_list')
 	else:
@@ -116,40 +116,60 @@ def payment(request, **pk):
 	# return rendered data
 	return render(request, 'stumgmt/payment.html', context)	
 
-def teacher_lesson(request):
+def teacher_lesson(request, **pk):
+
+	try:
+		lesson = get_object_or_404(Lesson, pk=pk['pk'])
+		student = lesson.student
+		student_o = get_object_or_404(Student, pk=student.pk)
+		default_data = {
+			'student': student_o,
+			}
+	except:
+		pass
 	
 	if request.method == 'POST':
-		form = TeacherLessonForm(request.POST)
+		form = TeacherLessonForm(request.POST, instance=lesson)
 
 		if form.is_valid():
-			payment = form.save(commit = False)
+			confirm = form.save(commit = False)
 			# student.post = post
 			# student.author = request.user
 
-			#Email alert for comment
-			# context = {'name': comment.post, 'sender': comment.author, 'message': comment.text} 
-			# template = get_template('blog/contact_temp.txt')
-			# content = template.render(context)
 
-			# # Compose email message
-			# email = EmailMessage('Comment from sh19238 website', content, 'sh19238 contact', to=['Steven Hwang <shihwei.hwang@gmail.com>'])
-			# email.send()
-
-			payment.save()
+			confirm.stash()
 			return redirect('index')
 	else:
-		form = TeacherLessonForm()
+		try:
+			form = TeacherLessonForm(initial=default_data)
+		except:
+			form = TeacherLessonForm()
+
 	
-	context = {'form': form}
+	try:
+		context = {'form': form, 'student': student_o}
+	except:
+		context = {'form': form}
+	
 	return render(request, 'stumgmt/lesson.html', context)	
 
-def student_lesson(request):
+def student_lesson(request, **pk):
+	
+	try:
+		student = get_object_or_404(Student, pk=pk['pk'])
+		lesson = student.student_in_lesson_model.all()
+		default_data = {
+			'student': student,
+			
+			}
+	except:
+		pass
 	
 	if request.method == 'POST':
 		form = StudentLessonForm(request.POST)
 
 		if form.is_valid():
-			payment = form.save(commit = False)
+			confirm = form.save(commit = False)
 			# student.post = post
 			# student.author = request.user
 
@@ -161,11 +181,15 @@ def student_lesson(request):
 			# # Compose email message
 			# email = EmailMessage('Comment from sh19238 website', content, 'sh19238 contact', to=['Steven Hwang <shihwei.hwang@gmail.com>'])
 			# email.send()
-
-			payment.save()
+			confirm.student_signed_at = timezone.now()
+			confirm.save()
 			return redirect('index')
 	else:
-		form = StudentLessonForm()
+		
+		try:
+			form = StudentLessonForm(initial=default_data)
+		except:
+			form = StudentLessonForm()
 	
 	context = {'form': form}
 	return render(request, 'stumgmt/student_lesson.html', context)	
@@ -177,17 +201,27 @@ def student_list(request):
 
 def student_detail(request, pk):
 	student = get_object_or_404(Student, pk=pk)
-	context = {'student': student}
+	unsigned = Lesson.objects.filter(student = student, teacher_signed_at__isnull = True).order_by('-student_signed_at')
+	context = {'student': student, 'unsigned': unsigned}
 	return render(request, 'stumgmt/student_detail.html', context)
 
 
-def search_result(request):
+def search_result(request, *view_limit):
 	
+	try:
+		view_limit = request.GET.get('view_limit')
+	except:
+		pass
+
 	query_string = request.GET.get('q')
 	query = Student.objects.filter(student_name__icontains=query_string)
 	
 	#Pagination
-	paginator = Paginator(query, 2, orphans=1)
+	try:
+		paginator = Paginator(query, view_limit, orphans=1)
+	except:
+		paginator = Paginator(query, 2, orphans=1)
+		
 	page = request.GET.get('page')
 	
 	try:
@@ -196,8 +230,16 @@ def search_result(request):
 		query = paginator.page(1)
 	except EmptyPage:
 		query = paginator.page(paginator.num_pages)
+		
+	# path = request.get_full_path()
+	# referer = request.META.get('HTTP_REFERER')
+	# new_p = referer+path[1:]+'?q='+query_string
+	context = {'query_string': query_string, 'query': query, 'view_limit': view_limit}
 	
-	context = {'query_string': query_string, 'query': query}
+	# try:
+	# 	return redirect('search', query_string, view_limit)
+	# except:
+
 	return render(request, 'stumgmt/search_result.html', context)
     
 # class Student_List(ListView):

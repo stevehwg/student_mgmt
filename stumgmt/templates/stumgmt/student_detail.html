@@ -8,7 +8,9 @@
 	<div class="row">
 		<div class="col-xs-8">
 			
-			<a href="{% url 'new_student_payment' student.pk %}">Record student Payment</a>
+			// <a href="{% url 'new_student_payment' student.pk %}">Record student Payment</a>
+			// <a href="{% url 'new_student_lesson' student.pk %}">Record student Lesson</a>
+			// <a href="{% url 'new_teacher_lesson' student.pk %}">Record teacher Lesson</a> //
 			<p> 
 				{% for lesson in student.student_in_student.all %}
 				<li>
@@ -16,7 +18,7 @@
 					on {{lesson.student_signed_at | date:"SHORT_DATE_FORMAT" }} 
 				</li>
 				{% empty %}
-				<!--<li>No students yet.</li>-->
+				<li>No lessons yet.</li>
 				{% endfor %}
 				{% for t in student.student_in_teacher.all %}
 				<li>
@@ -24,7 +26,15 @@
 					on {{t.teacher_signed_at | date:"SHORT_DATE_FORMAT" }}
 				</li>
 				{% empty %}
-				<li>No students yet.</li>
+				<li>No teachers yet.</li>
+				{% endfor %}
+				<p></p>
+				{% for i in unsigned %}
+				<li>
+					This is student in Student Lesson Model <a href="{% url 'new_teacher_lesson' i.pk %}">{{ i }}</a> with teacher unsigned.
+				</li>
+				{% empty %}
+				<li>This is wrong.</li>
 				{% endfor %}
 			</p>
 		</div>

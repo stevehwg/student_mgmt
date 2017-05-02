@@ -4,7 +4,13 @@
 {% block content %}
 	<div class="row" id="subheader">
 		<div class="col-xs-12 h3" id="pagetitle"><strong>You Searched "{{ query_string }}"</strong></div>
+		<!--<form method="get" action="https://stumgmt2-stevehwg.c9users.io/search/?q={{query_string}}&">-->
+		<!--	<input type="text" name="view_limit" placeholder='search' required />-->
+		<!--	<input type="submit" class="save btn btn-default btn-xs" value="Submit"/>-->
+		<!--</form>-->
+		<a href="?q={{ query_string }}&view_limit=1">1</a>
 	</div>
+
 	<div class="row">
 		<div class="col-xs-12">
 			<p>
@@ -19,7 +25,7 @@
 		<div class="pagination"  class="col-xs-12">
 			<span class="step-links">
 			{% if query.has_previous %}
-			    <a href="?q={{ query_string }}&page={{ query.previous_page_number }}">previous</a>
+			    <a href="?q={{ query_string }}&view_limit=1&page={{ query.previous_page_number }}">previous</a>
 			{% endif %}
 			
 			<span class="current">
@@ -27,7 +33,7 @@
 			</span>
 			
 			{% if query.has_next %}
-			    <a href="?q={{ query_string }}&page={{ query.next_page_number }}">next</a>
+			    <a href="?q={{ query_string }}&view_limit={{view_limit}}&page={{ query.next_page_number }}">next</a>
 			{% endif %}
 			</span>
 		</div>
