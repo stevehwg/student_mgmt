@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+from __future__ import str_literals
 
 from django.db import models
 from django.utils import timezone
@@ -47,7 +47,7 @@ class Student(models.Model):
     def get_user(self):
         return self.student_name
     
-    def __unicode__(self):
+    def __str__(self):
         return self.student_name
 
 class Payment(models.Model):
@@ -86,7 +86,7 @@ class Payment(models.Model):
     def get_student_rate(self):
         return self.student.student_rate
     
-    def __unicode__(self):
+    def __str__(self):
         return str(self.student.student_name) + ' - $' + str(self.payment_received)
     
     
@@ -96,7 +96,7 @@ class Note(models.Model):
     last_mod_date = models.DateTimeField(default = timezone.now)
     text = models.TextField()
     
-    def __unicode__(self):
+    def __str__(self):
         return str(self.teacher)
         
 class TeacherLesson(models.Model):
@@ -110,7 +110,7 @@ class TeacherLesson(models.Model):
     def stash(self):
         self.save()
     
-    def __unicode__(self):
+    def __str__(self):
         return str(self.teacher.get_username())
 
 class StudentLesson(models.Model):
@@ -121,7 +121,7 @@ class StudentLesson(models.Model):
     # not visible for modification
     student_signed_at = models.DateTimeField(default = timezone.now, blank = True, null = True)
     
-    def __unicode__(self):
+    def __str__(self):
         return str(self.student.student_name)
         
 class Lesson(models.Model):
@@ -141,5 +141,5 @@ class Lesson(models.Model):
         self.teacher_signed_at = timezone.now()
         self.save()    
     
-    def __unicode__(self):
+    def __str__(self):
         return str(self.teacher.get_username()) + ' ' + str(self.student.student_name)
