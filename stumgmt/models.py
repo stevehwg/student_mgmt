@@ -22,7 +22,7 @@ class Student(models.Model):
     address = models.CharField(max_length = 256, blank = True, null = True)
     phone_number_2 = models.CharField(max_length = 20, blank = True, null = True)
     preferred_lesson = models.CharField(max_length = 50, blank = True, null = True)
-    regiunicodeation_note = models.TextField(blank = True, null = True)
+    registration_note = models.TextField(blank = True, null = True)
     
     # for admin use only
     # assign a teacher after student is registered
