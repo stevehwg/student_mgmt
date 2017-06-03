@@ -1,4 +1,4 @@
-from __future__ import str_literals
+from __future__ import unicode_literals
 
 from django.db import models
 from django.utils import timezone
@@ -7,7 +7,7 @@ from datetime import timedelta
 
 # Create your models here.
 class Student(models.Model):
-    # Student Registration Form
+    # Student Regiunicodeation Form
     
     # required info
     parent_name = models.CharField(max_length = 100)
@@ -22,7 +22,7 @@ class Student(models.Model):
     address = models.CharField(max_length = 256, blank = True, null = True)
     phone_number_2 = models.CharField(max_length = 20, blank = True, null = True)
     preferred_lesson = models.CharField(max_length = 50, blank = True, null = True)
-    registration_note = models.TextField(blank = True, null = True)
+    regiunicodeation_note = models.TextField(blank = True, null = True)
     
     # for admin use only
     # assign a teacher after student is registered
@@ -47,7 +47,7 @@ class Student(models.Model):
     def get_user(self):
         return self.student_name
     
-    def __str__(self):
+    def __unicode__(self):
         return self.student_name
 
 class Payment(models.Model):
@@ -86,8 +86,8 @@ class Payment(models.Model):
     def get_student_rate(self):
         return self.student.student_rate
     
-    def __str__(self):
-        return str(self.student.student_name) + ' - $' + str(self.payment_received)
+    def __unicode__(self):
+        return unicode(self.student.student_name) + ' - $' + unicode(self.payment_received)
     
     
 class Note(models.Model):
@@ -96,8 +96,8 @@ class Note(models.Model):
     last_mod_date = models.DateTimeField(default = timezone.now)
     text = models.TextField()
     
-    def __str__(self):
-        return str(self.teacher)
+    def __unicode__(self):
+        return unicode(self.teacher)
         
 class TeacherLesson(models.Model):
     teacher = models.ForeignKey('auth.User', related_name = 'teacher_lesson')
@@ -110,8 +110,8 @@ class TeacherLesson(models.Model):
     def stash(self):
         self.save()
     
-    def __str__(self):
-        return str(self.teacher.get_username())
+    def __unicode__(self):
+        return unicode(self.teacher.get_username())
 
 class StudentLesson(models.Model):
     teacher = models.ForeignKey('auth.User', related_name = 'student_lesson')
@@ -121,8 +121,8 @@ class StudentLesson(models.Model):
     # not visible for modification
     student_signed_at = models.DateTimeField(default = timezone.now, blank = True, null = True)
     
-    def __str__(self):
-        return str(self.student.student_name)
+    def __unicode__(self):
+        return unicode(self.student.student_name)
         
 class Lesson(models.Model):
     teacher = models.ForeignKey('auth.User', related_name = 'teacher_in_lesson_model')
@@ -141,5 +141,5 @@ class Lesson(models.Model):
         self.teacher_signed_at = timezone.now()
         self.save()    
     
-    def __str__(self):
-        return str(self.teacher.get_username()) + ' ' + str(self.student.student_name)
+    def __unicode__(self):
+        return unicode(self.teacher.get_username()) + ' ' + unicode(self.student.student_name)
